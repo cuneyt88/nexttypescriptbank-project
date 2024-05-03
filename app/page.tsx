@@ -1,95 +1,95 @@
-import Image from "next/image";
+'use client'
 import styles from "./page.module.css";
+import React, { useState } from "react";
+import Dashboard from "./dashboard/page";
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Accounts from "./components/Accounts";
+import AccountDetail from "./components/AccountDetail";
+import { useForm } from 'react-hook-form';
+import { WitdrawButtonandInput } from "./components/WithdrawButtonandInput";
+import { AddressInput, TcknInput } from "./components/Input";
+import {  ClearSaveButton } from "./components/Buttons";
+import Navigation from "./components/Navigation";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography component="div">{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
 
 export default function Home() {
+
+  const [message, setMessage] = useState("")
+
+  const [value, setValue] = React.useState(0);
+
+  const {register,watch}=useForm();
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
+      <Navigation/>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs className="my-5" value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab label="Kişisel Bilgiler" {...a11yProps(0)} />
+          <Tab label="Hesap Bilgileri" {...a11yProps(1)} />
+          <Tab label="tckn Bilgileri" {...a11yProps(2)} />
+        </Tabs>
+      </Box>
+      <CustomTabPanel value={value} index={0}>
+        <Dashboard/>
         <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            <AddressInput register={register}/>
+            <ClearSaveButton/>
         </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={1}>
+        <div>
+          <Dashboard/>
+          <Accounts register={register}/>
+        </div>
+        
+        <AccountDetail/>
+        <WitdrawButtonandInput register={register}/>
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <TcknInput register={register}/>
+        <ClearSaveButton/>
+      </CustomTabPanel>
     </main>
   );
 }
