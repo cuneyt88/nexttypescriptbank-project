@@ -6,9 +6,7 @@ export async function dbConnect() {
       return mongoose.connection.db;
     }
   
-    const MONGO_URI = `mongodb+srv://aveiroman01:cuneyt7088@cluster0.w8rzxom.mongodb.net/bankaccountdb?retryWrites=true&w=majority&appName=Cluster0`;
-    const DATABASE_NAME = "bankaccountdb";
-  
+    const MONGO_URI = process.env.MONGO_URI;
     await mongoose.connect(`${MONGO_URI}`);
   
     console.log('Veritabanı bağlantısı başarılı.');
